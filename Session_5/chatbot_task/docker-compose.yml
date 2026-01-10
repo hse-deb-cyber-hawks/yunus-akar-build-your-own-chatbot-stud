@@ -18,6 +18,7 @@ services:
       - OLLAMA_HOST_NAME=ollama
       - CHROMA_HOST_NAME=chroma
       - PDF_DOC_PATH=/app/src/AI_Book.pdf
+      - LANGCHAIN_VERBOSE=true
     depends_on:
       chroma:
         condition: service_healthy

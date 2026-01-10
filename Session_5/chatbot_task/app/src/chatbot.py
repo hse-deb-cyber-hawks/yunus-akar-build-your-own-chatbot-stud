@@ -19,6 +19,10 @@ from typing import List
 import logging
 import os
 
+from langchain.globals import set_debug
+
+set_debug(True)
+
 # Hint: Use these variables in your tasks
 OLLAMA_HOST_NAME = os.environ.get("OLLAMA_HOST_NAME", "localhost")
 CHROMA_HOST_NAME = os.environ.get("CHROMA_HOST_NAME", "localhost")
@@ -81,6 +85,8 @@ class CustomChatBot:
         self.llm = ChatOllama(
             base_url=f"http://{OLLAMA_HOST_NAME}:11434",
             model=MODEL_NAME,
+            request_timeout=120,
+            temperature=0.3
         )
 
         # Set up the retrieval-augmented generation (RAG) pipeline
@@ -166,10 +172,14 @@ class CustomChatBot:
         logger.info("Initialize rag chain.")
 
         # Task: Define prompt
-        prompt_template = """Answer the question based only on the following context:
-        {context}
+        prompt_template = """Du bist ein äußerst hilfreicher, akademischer Assistent. 
+        Deine Aufgabe ist es, auf die Frage des Benutzers basierend auf dem folgenden Kontext zu antworten. 
+        Fasse die Antwort in einem ausführlichen, gut strukturierten Absatz zusammen und achte dabei darauf, 
+        **die genaue Fachterminologie und Originalbegriffe** aus dem Kontext zu verwenden.
 
-        Question: {question}
+        Kontext: {context}
+
+        Frage: {question}
         """
 
         # Task: Initialize prompt langchain prompt template
